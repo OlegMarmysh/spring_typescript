@@ -1,0 +1,47 @@
+@import "../../MainMixiins";
+
+main {
+  padding-top: 80px;
+
+  @media (max-width: 400px) {
+    padding-top: 50px;
+  }
+}
+
+.wrapperBlock {
+  @include wrapperBlock
+}
+
+.headpiece {
+  height: 400px;
+  position: absolute;
+  right: -170px;
+  top: 0;
+  z-index: -1;
+  max-width: 85%;
+}
+
+.mainContent {
+  p {
+    font-size: 26px;
+    line-height: 45px;
+    margin: 20px 100px 80px 0;
+
+    @media (max-width: 885px) {
+      font-size: 22px;
+      line-height: 35px;
+      margin: 20px 10px 80px 0;
+    }
+
+    @media (max-width: 550px) {
+      font-size: 20px;
+      line-height: 35px;
+    }
+
+    @media (max-width: 400px) {
+      font-size: 18px;
+      margin: 20px 10px 60px 0;
+      padding: 10px;
+    }
+  }
+}

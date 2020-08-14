@@ -1,0 +1,24 @@
+.springFooterLeft {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: .6;
+
+  @media (max-width: 550px) {
+    display: none;
+  }
+
+  p {
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  a {
+    &:hover {
+      color: #006d00;
+    }
+  }
+
+  li {
+    margin-bottom: 15px;
+  }
+}

@@ -1,0 +1,55 @@
+.springFooterRight {
+  div {
+    max-width: 410px;
+
+    @media (max-width: 400px) {
+      max-width: 330px;
+    }
+  }
+
+  label {
+    font-size: 14px;
+    color: #b7b7b7;
+    margin-left: 30px;
+    text-align: left;
+    display: block;
+  }
+
+  input[type = 'checkbox'] {
+    transform: translateY(22px);
+  }
+
+  h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+}
+
+.sendingData {
+  display: inline-flex;
+
+  button {
+    outline: none;
+    border: none;
+    padding: 5px 20px;
+    background: black;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: .3s;
+
+    &:hover {
+      background: #009300;
+    }
+
+    @media (max-width: 400px) {
+      padding: 5px 25px;
+    }
+  }
+
+  input {
+    border: 2px solid black;
+    padding: 8px;
+    outline: none;
+  }
+}

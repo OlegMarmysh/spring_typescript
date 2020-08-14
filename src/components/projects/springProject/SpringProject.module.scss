@@ -1,0 +1,39 @@
+.springProject {
+  margin-bottom: 20px;
+  border-radius: 5px;
+  background-color: white;
+  width: 40%;
+  display: flex;
+  padding: 30px 20px 50px 20px;
+  transition: .3s;
+
+  &:hover {
+    cursor: pointer;
+    transform: translateY(-6px);
+    box-shadow: 0 10px 20px #868686;
+  }
+
+  p {
+    margin-top: 15px;
+    line-height: 30px;
+
+    @media (max-width: 400px) {
+      font-size: 14px;
+      line-height: 25px;
+    }
+  }
+
+  img {
+    height: 60px;
+    width: 60px;
+    margin-right: 20px;
+  }
+
+  @media (max-width: 885px) {
+    flex-basis: 100%;
+  }
+
+  @media (max-width: 400px) {
+    padding: 20px;
+  }
+}
