@@ -1,13 +1,8 @@
-import { InitialStateType } from "./projectPageReducer"
+import { ProjectInitialState } from './projectPageReducer'
 
-export const SET_PROJECTS = 'spring/projectsPage/SET_PROJECTS'
-
-type SetProjectsActionType = {
-  type: typeof SET_PROJECTS,
-  payload: InitialStateType
+export const projectsActions = {
+  setProjects: (projects: ProjectInitialState) => ({
+    type: 'spring/projectsPage/SET_PROJECTS',
+    payload: projects
+  } as const)
 }
-
-export const setProjects = (projects: InitialStateType): SetProjectsActionType => ({
-  type: SET_PROJECTS,
-  payload: projects
-})

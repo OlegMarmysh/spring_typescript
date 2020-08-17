@@ -3,7 +3,7 @@ import style from './Register.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink, useHistory } from 'react-router-dom'
 import { register, resetRegisterError } from '../../redux/registerPageReducer'
-import { setErrorMessage } from '../../redux/registerAction'
+import { registerActions } from '../../redux/registerAction'
 
 const Register = () => {
   const [login, setLogin] = useState('')
@@ -44,7 +44,7 @@ const Register = () => {
     e.preventDefault()
     try {
       if (password !== passwordRepeat) {
-        dispatch(setErrorMessage('Passwords must match'))
+        dispatch(registerActions.setErrorMessage('Passwords must match'))
       } else {
         const res = await dispatch(register(login, password, firstName, lastName, age))
         if (!res) {
@@ -67,16 +67,20 @@ const Register = () => {
         <div>
           <span>{loginError.msg}</span>
         </div>
-        <input type="password" placeholder="password" value={password} onChange={onPasswordChange} required/>
+        <input type="password" placeholder="password" value={password}
+          onChange={onPasswordChange} required/>
         <div>
           <span>{passError.msg}</span>
         </div>
-        <input type="password" placeholder="confirm password" value={passwordRepeat} onChange={onPasswordRepeatChange} required/>
-        <input type="text" placeholder="firstName" value={firstName} onChange={onFirstNameChange} required/>
+        <input type="password" placeholder="confirm password" value={passwordRepeat}
+          onChange={onPasswordRepeatChange} required/>
+        <input type="text" placeholder="firstName" value={firstName}
+          onChange={onFirstNameChange} required/>
         <div>
           <span>{firstNameError.msg}</span>
         </div>
-        <input type="text" placeholder="lastName" value={lastName} onChange={onLastNameChange} required/>
+        <input type="text" placeholder="lastName" value={lastName}
+          onChange={onLastNameChange} required/>
         <div>
           <span>{lastNameError.msg}</span>
         </div>
@@ -89,7 +93,8 @@ const Register = () => {
         </div>
         <div>
           <button className={style.loginBtn}>Registration</button>
-          <NavLink to='/login'><button className={style.loginBtn} onClick={onCancelRegistration}>Cancel</button></NavLink>
+          <NavLink to='/login'><button className={style.loginBtn}
+            onClick={onCancelRegistration}>Cancel</button></NavLink>
         </div>
       </form>
     </div>

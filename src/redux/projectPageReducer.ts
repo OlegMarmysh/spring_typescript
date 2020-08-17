@@ -1,5 +1,6 @@
 import { projectsAPI } from '../api'
-import { SET_PROJECTS, setProjects } from './projectAction'
+import { projectsActions } from './projectAction'
+import { ActionsType, CommonThunkType } from './store'
 
 type Projects = {
   id: string,
@@ -8,19 +9,19 @@ type Projects = {
   body: string
 }
 
-export type InitialStateType = {
-  springProjects: Array<Projects>,
-  springAtticProjects: Array<Projects>
+const initialState = {
+  springProjects: [] as Array<Projects>,
+  springAtticProjects: [] as Array<Projects>
 }
 
-const initialState: InitialStateType = {
-  springProjects: [],
-  springAtticProjects: []
-}
+export type ProjectInitialState = typeof initialState
 
-const projectPageReducer = (state = initialState, action: any): InitialStateType => {
+type ProjectsActionsType = ActionsType<typeof projectsActions>
+
+const projectPageReducer = (state = initialState,
+  action: ProjectsActionsType): ProjectInitialState => {
   switch (action.type) {
-    case SET_PROJECTS: {
+    case 'spring/projectsPage/SET_PROJECTS': {
       return {
         ...state,
         ...action.payload
@@ -31,19 +32,23 @@ const projectPageReducer = (state = initialState, action: any): InitialStateType
   }
 }
 
-export const getProjects = () => async (dispatch: any) => {
+type ProjectsThunkType = CommonThunkType<ProjectsActionsType>
+
+const { setProjects } = projectsActions
+
+export const getProjects = (): ProjectsThunkType => async dispatch => {
   try {
-    const projects = await projectsAPI.getProjects()
-    dispatch(setProjects(projects.data))
+    const data = await projectsAPI.getProjects()
+    dispatch(setProjects(data))
   } catch (error) {
     console.log(error)
   }
 }
 
-export const searchProjects = (inputValue: string) => async (dispatch: any) => {
+export const searchProjects = (inputValue: string): ProjectsThunkType => async dispatch => {
   try {
-    const projects = await projectsAPI.searchProjects(inputValue)
-    dispatch(setProjects(projects.data))
+    const data = await projectsAPI.searchProjects(inputValue)
+    dispatch(setProjects(data))
   } catch (error) {
     console.log(error)
   }

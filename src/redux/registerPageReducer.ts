@@ -1,17 +1,6 @@
-import {
-  SET_LOGIN_ERROR,
-  SET_PASS_ERROR,
-  SET_ERROR_MESSAGE,
-  setErrorMessage,
-  setLoginError,
-  setPassError,
-  SET_FIRSTNAME_ERROR,
-  SET_LASTNAME_ERROR,
-  SET_AGE_ERROR,
-  setFirstNameError,
-  setLastNameError, setAgeError
-} from './registerAction'
+import { registerActions } from './registerAction'
 import { authAPI } from '../api'
+import { ActionsType, CommonThunkType } from './store'
 
 export type RegisterErrorType = {
   value: string,
@@ -20,32 +9,28 @@ export type RegisterErrorType = {
   location: string
 }
 
-export type InitialStateType = {
-  errorMessage: string,
-  loginError: Error | Object,
-  passError: Error | Object,
-  firstNameError: Error | Object,
-  lastNameError: Error | Object,
-  ageError: Error | Object
-}
-
 const initialState = {
   errorMessage: '',
-  loginError: {},
-  passError: {},
-  firstNameError: {},
-  lastNameError: {},
-  ageError: {}
+  loginError: {} as RegisterErrorType | Object,
+  passError: {} as RegisterErrorType | Object,
+  firstNameError: {} as RegisterErrorType | Object,
+  lastNameError: {} as RegisterErrorType | Object,
+  ageError: {} as RegisterErrorType | Object
 }
 
-const registerPageReducer = (state = initialState, action: any): InitialStateType => {
+export type RegisterInitialState = typeof initialState
+
+type RegisterActionsType = ActionsType<typeof registerActions>
+
+const registerPageReducer = (state = initialState,
+  action: RegisterActionsType): RegisterInitialState => {
   switch (action.type) {
-    case SET_ERROR_MESSAGE:
-    case SET_LOGIN_ERROR:
-    case SET_PASS_ERROR:
-    case SET_FIRSTNAME_ERROR:
-    case SET_LASTNAME_ERROR:
-    case SET_AGE_ERROR: {
+    case 'spring/registerPage/SET_ERROR_MESSAGE':
+    case 'spring/registerPage/SET_LOGIN_ERROR':
+    case 'spring/registerPage/SET_PASS_ERROR':
+    case 'spring/registerPage/SET_FIRSTNAME_ERROR':
+    case 'spring/registerPage/SET_LASTNAME_ERROR':
+    case 'spring/registerPage/SET_AGE_ERROR': {
       return {
         ...state,
         ...action.payload
@@ -56,7 +41,14 @@ const registerPageReducer = (state = initialState, action: any): InitialStateTyp
   }
 }
 
-export const resetRegisterError = () => (dispatch: any) => {
+const {
+  setAgeError, setErrorMessage, setFirstNameError,
+  setLastNameError, setLoginError, setPassError
+} = registerActions
+
+type RegisterThunkType = CommonThunkType<RegisterActionsType>
+
+export const resetRegisterError = (): CommonThunkType<RegisterActionsType, void> => dispatch => {
   dispatch(setErrorMessage(''))
   dispatch(setLoginError({}))
   dispatch(setPassError({}))
@@ -65,7 +57,8 @@ export const resetRegisterError = () => (dispatch: any) => {
   dispatch(setAgeError({}))
 }
 
-export const register = (login: string, password: string, firstName: string, lastName: string, age: number) => async (dispatch: any) => {
+export const register = (login: string, password: string, firstName: string,
+  lastName: string, age: number): RegisterThunkType => async dispatch => {
   try {
     await authAPI.register(login, password, firstName, lastName, age)
     dispatch(resetRegisterError())
@@ -73,11 +66,16 @@ export const register = (login: string, password: string, firstName: string, las
     dispatch(resetRegisterError())
     dispatch(setErrorMessage(error.response.data.error))
     if (error.response.data.errors) {
-      dispatch(setLoginError(error.response.data.errors.find((error: RegisterErrorType) => error.param === 'login') || { msg: '' }))
-      dispatch(setPassError(error.response.data.errors.find((error: RegisterErrorType) => error.param === 'password') || { msg: '' }))
-      dispatch(setFirstNameError(error.response.data.errors.find((error: RegisterErrorType) => error.param === 'firstName') || { msg: '' }))
-      dispatch(setLastNameError(error.response.data.errors.find((error: RegisterErrorType) => error.param === 'lastName') || { msg: '' }))
-      dispatch(setAgeError(error.response.data.errors.find((error: RegisterErrorType) => error.param === 'age') || { msg: '' }))
+      dispatch(setLoginError(error.response.data.errors.find(
+        (error: RegisterErrorType) => error.param === 'login') || { msg: '' }))
+      dispatch(setPassError(error.response.data.errors.find(
+        (error: RegisterErrorType) => error.param === 'password') || { msg: '' }))
+      dispatch(setFirstNameError(error.response.data.errors.find(
+        (error: RegisterErrorType) => error.param === 'firstName') || { msg: '' }))
+      dispatch(setLastNameError(error.response.data.errors.find(
+        (error: RegisterErrorType) => error.param === 'lastName') || { msg: '' }))
+      dispatch(setAgeError(error.response.data.errors.find(
+        (error: RegisterErrorType) => error.param === 'age') || { msg: '' }))
     }
     console.log(error)
     return error

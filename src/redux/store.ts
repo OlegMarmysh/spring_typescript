@@ -1,6 +1,6 @@
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
+import { Action, applyMiddleware, combineReducers, createStore } from 'redux'
 import loginPageReducer from './loginPageReducer'
-import thunk from 'redux-thunk'
+import thunk, { ThunkAction } from 'redux-thunk'
 import projectPageReducer from './projectPageReducer'
 import registerPageReducer from './registerPageReducer'
 import { composeWithDevTools } from 'redux-devtools-extension'
@@ -15,7 +15,10 @@ type RootReducer = typeof rootReducer
 export type AppStateType = ReturnType<RootReducer>
 
 type PropertiesType<A> = A extends {[key: string]: infer U} ? U : never
-export type ActionsType<A extends {[key: string]: (...args: any[]) => any}> = ReturnType<PropertiesType<A>>
+export type ActionsType<A extends {[key: string]:
+      (...args: any[]) => any}> = ReturnType<PropertiesType<A>>
+export type CommonThunkType<A extends Action, R = Promise<void>> = ThunkAction<R,
+    AppStateType, unknown, A>
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
 

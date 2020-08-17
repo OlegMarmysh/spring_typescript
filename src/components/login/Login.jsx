@@ -3,7 +3,7 @@ import style from './Login.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink, useHistory } from 'react-router-dom'
 import { signIn } from '../../redux/loginPageReducer'
-import { setErrorMessage } from '../../redux/loginAction'
+import { loginActions } from '../../redux/loginAction'
 
 const Login = () => {
   const [login, setLogin] = useState('')
@@ -28,7 +28,7 @@ const Login = () => {
     })
   }
   const onRegistration = () => {
-    dispatch(setErrorMessage(''))
+    dispatch(loginActions.setErrorMessage(''))
   }
   return (
     <div className={style.wrapper}>
