@@ -1,7 +1,6 @@
 import { loginActions } from './loginAction'
 import { authAPI } from '../api'
-import { ThunkAction } from 'redux-thunk'
-import { AppStateType, ActionsType, BaseThunkType } from './store'
+import { ActionsType, BaseThunkType } from './store'
 
 const initialState = {
   login: null as string | null,
@@ -12,7 +11,8 @@ export type LoginInitialState = typeof initialState
 
 type LoginActionsType = ActionsType<typeof loginActions>
 
-const loginPageReducer = (state = initialState, action: LoginActionsType): LoginInitialState => {
+const loginPageReducer = (state = initialState,
+  action: LoginActionsType): LoginInitialState => {
   switch (action.type) {
     case 'spring/loginPage/SET_USER_DATA':
     case 'spring/loginPage/SET_ERROR_MESSAGE': {
@@ -33,8 +33,8 @@ const { setUserData, setErrorMessage } = loginActions
 
 export const signIn = (login: string, password: string): LoginThunkType => async dispatch => {
   try {
-    const response = await authAPI.login(login, password)
-    localStorage.setItem('token', response.data.token)
+    const data = await authAPI.login(login, password)
+    localStorage.setItem('token', data.token)
     dispatch(setUserData(login))
     dispatch(setErrorMessage(''))
   } catch (error) {
