@@ -1,51 +1,21 @@
-import {
-  SET_LOGIN_ERROR,
-  SET_PASS_ERROR,
-  SET_ERROR_MESSAGE,
-  setErrorMessage,
-  setLoginError,
-  setPassError,
-  SET_FIRSTNAME_ERROR,
-  SET_LASTNAME_ERROR,
-  SET_AGE_ERROR,
-  setFirstNameError,
-  setLastNameError, setAgeError
-} from './registerAction'
+import { registerActions } from './registerAction'
 import { authAPI } from '../api'
-
-export type RegisterErrorType = {
-  value: string,
-  msg: string,
-  param: string,
-  location: string
-}
+import { ActionsType, AppStateType } from './store'
+import { ThunkAction } from 'redux-thunk'
 
 export type InitialStateType = {
   errorMessage: string,
-  loginError: Error | Object,
-  passError: Error | Object,
-  firstNameError: Error | Object,
-  lastNameError: Error | Object,
-  ageError: Error | Object
 }
 
 const initialState = {
-  errorMessage: '',
-  loginError: {},
-  passError: {},
-  firstNameError: {},
-  lastNameError: {},
-  ageError: {}
+  errorMessage: ''
 }
 
-const registerPageReducer = (state = initialState, action: any): InitialStateType => {
+type RegisterActionsType = ActionsType<typeof registerActions>
+
+const registerPageReducer = (state = initialState, action: RegisterActionsType): InitialStateType => {
   switch (action.type) {
-    case SET_ERROR_MESSAGE:
-    case SET_LOGIN_ERROR:
-    case SET_PASS_ERROR:
-    case SET_FIRSTNAME_ERROR:
-    case SET_LASTNAME_ERROR:
-    case SET_AGE_ERROR: {
+    case 'spring/registerPage/SET_ERROR_MESSAGE': {
       return {
         ...state,
         ...action.payload
@@ -56,29 +26,15 @@ const registerPageReducer = (state = initialState, action: any): InitialStateTyp
   }
 }
 
-export const resetRegisterError = () => (dispatch: any) => {
-  dispatch(setErrorMessage(''))
-  dispatch(setLoginError({}))
-  dispatch(setPassError({}))
-  dispatch(setFirstNameError({}))
-  dispatch(setLastNameError({}))
-  dispatch(setAgeError({}))
-}
+type RegisterThunkType = ThunkAction<Promise<void>, AppStateType, unknown, RegisterActionsType>
 
-export const register = (login: string, password: string, firstName: string, lastName: string, age: number) => async (dispatch: any) => {
+export const register = (login: string, password: string, firstName: string, lastName: string, age: number): RegisterThunkType => async dispatch => {
   try {
     await authAPI.register(login, password, firstName, lastName, age)
-    dispatch(resetRegisterError())
+    dispatch(registerActions.setErrorMessage(''))
   } catch (error) {
-    dispatch(resetRegisterError())
-    dispatch(setErrorMessage(error.response.data.error))
-    if (error.response.data.errors) {
-      dispatch(setLoginError(error.response.data.errors.find((error: RegisterErrorType) => error.param === 'login') || { msg: '' }))
-      dispatch(setPassError(error.response.data.errors.find((error: RegisterErrorType) => error.param === 'password') || { msg: '' }))
-      dispatch(setFirstNameError(error.response.data.errors.find((error: RegisterErrorType) => error.param === 'firstName') || { msg: '' }))
-      dispatch(setLastNameError(error.response.data.errors.find((error: RegisterErrorType) => error.param === 'lastName') || { msg: '' }))
-      dispatch(setAgeError(error.response.data.errors.find((error: RegisterErrorType) => error.param === 'age') || { msg: '' }))
-    }
+    dispatch(registerActions.setErrorMessage(''))
+    dispatch(registerActions.setErrorMessage(error.response.data.error))
     console.log(error)
     return error
   }

@@ -1,5 +1,6 @@
 import { projectsAPI } from '../api'
-import { SET_PROJECTS, setProjects } from './projectAction'
+import { projectsAction } from './projectAction'
+import { ActionsType, BaseThunkType } from './store'
 
 type Projects = {
   id: string,
@@ -18,9 +19,11 @@ const initialState: InitialStateType = {
   springAtticProjects: []
 }
 
-const projectPageReducer = (state = initialState, action: any): InitialStateType => {
+type ProjectsPageActionsType = ActionsType<typeof projectsAction>
+
+const projectPageReducer = (state = initialState, action: ProjectsPageActionsType): InitialStateType => {
   switch (action.type) {
-    case SET_PROJECTS: {
+    case 'spring/projectsPage/SET_PROJECTS': {
       return {
         ...state,
         ...action.payload
@@ -31,7 +34,11 @@ const projectPageReducer = (state = initialState, action: any): InitialStateType
   }
 }
 
-export const getProjects = () => async (dispatch: any) => {
+const { setProjects } = projectsAction
+
+type ProjectsThunkType = BaseThunkType<ProjectsPageActionsType>
+
+export const getProjects = (): ProjectsThunkType => async dispatch => {
   try {
     const projects = await projectsAPI.getProjects()
     dispatch(setProjects(projects.data))
@@ -40,7 +47,7 @@ export const getProjects = () => async (dispatch: any) => {
   }
 }
 
-export const searchProjects = (inputValue: string) => async (dispatch: any) => {
+export const searchProjects = (inputValue: string): ProjectsThunkType => async dispatch => {
   try {
     const projects = await projectsAPI.searchProjects(inputValue)
     dispatch(setProjects(projects.data))

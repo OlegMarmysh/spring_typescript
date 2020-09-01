@@ -1,26 +1,19 @@
-import React, { useState } from 'react'
+import React from 'react'
 import style from './Login.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink, useHistory } from 'react-router-dom'
 import { signIn } from '../../redux/loginPageReducer'
-import { setErrorMessage } from '../../redux/loginAction'
+import { loginActions } from '../../redux/loginAction'
+import { Field, Form, Formik } from 'formik'
+import { loginSchema } from '../../validationSchemas/loginSchema'
+import { ErrorMsg } from '../../helpers/ErrorMsgFormik'
 
 const Login = () => {
-  const [login, setLogin] = useState('')
-  const [password, setPassword] = useState('')
   const dispatch = useDispatch()
   const errorMessage = useSelector(state => state.loginPage.errorMessage)
   const history = useHistory()
 
-  const onLoginChange = (e) => {
-    setLogin(e.currentTarget.value)
-  }
-
-  const onPasswordChange = (e) => {
-    setPassword(e.currentTarget.value)
-  }
-  const onSubmit = (e) => {
-    e.preventDefault()
+  const onSubmit = ({ login, password }) => {
     dispatch(signIn(login, password)).then(() => {
       if (localStorage.getItem('token')) {
         history.push('/spring')
@@ -28,22 +21,35 @@ const Login = () => {
     })
   }
   const onRegistration = () => {
-    dispatch(setErrorMessage(''))
+    dispatch(loginActions.setErrorMessage(''))
   }
   return (
     <div className={style.wrapper}>
-      <form onSubmit={onSubmit} className={style.loginForm}>
+      <div className={style.loginForm}>
         <h2>Sign in</h2>
-        <input type="text" placeholder="login" value={login} onChange={onLoginChange}/>
-        <input type="password" placeholder="password" value={password} onChange={onPasswordChange}/>
-        <div>
-          <span>{errorMessage}</span>
-        </div>
-        <div>
-          <button className={style.loginBtn}>Sign in</button>
-          <NavLink to='/register' className={style.registerLink} onClick={onRegistration}>Registration</NavLink>
-        </div>
-      </form>
+        <Formik onSubmit={onSubmit}
+          validationSchema={loginSchema}
+          initialValues={{
+            login: '',
+            password: ''
+          }}>
+          {() => (
+            <Form>
+              <Field name='login' placeholder='login' type='text'/>
+              <ErrorMsg name='login'/>
+              <Field name='password' placeholder='password' type='password'/>
+              <ErrorMsg name='password'/>
+              <div>
+                <span>{errorMessage}</span>
+              </div>
+              <div>
+                <button className={style.loginBtn}>Sign in</button>
+                <NavLink to='/register' className={style.registerLink} onClick={onRegistration}>Registration</NavLink>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </div>
   )
 }

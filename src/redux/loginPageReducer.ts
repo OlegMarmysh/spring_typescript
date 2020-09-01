@@ -1,7 +1,7 @@
 import { loginActions } from './loginAction'
 import { authAPI } from '../api'
 import { ThunkAction } from 'redux-thunk'
-import { AppStateType, ActionsType } from './store'
+import { AppStateType, ActionsType, BaseThunkType } from './store'
 
 const initialState = {
   login: null as string | null,
@@ -26,11 +26,12 @@ const loginPageReducer = (state = initialState, action: LoginActionsType): Login
   }
 }
 
-type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, LoginActionsType>
+type LoginThunkType = BaseThunkType<LoginActionsType>
+type LogoutThunkType = BaseThunkType<LoginActionsType, void>
 
 const { setUserData, setErrorMessage } = loginActions
 
-export const signIn = (login: string, password: string): ThunkType => async dispatch => {
+export const signIn = (login: string, password: string): LoginThunkType => async dispatch => {
   try {
     const response = await authAPI.login(login, password)
     localStorage.setItem('token', response.data.token)
@@ -42,7 +43,7 @@ export const signIn = (login: string, password: string): ThunkType => async disp
   }
 }
 
-export const logOut = () => (dispatch: any) => {
+export const logOut = (): LogoutThunkType => dispatch => {
   dispatch(setUserData(null))
 }
 
